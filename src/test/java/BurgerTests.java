@@ -1,11 +1,16 @@
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import praktikum.Bun;
 import praktikum.Burger;
 import praktikum.Ingredient;
 import praktikum.IngredientType;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BurgerTests {
     /*
     Тесты класса Burger:
@@ -20,31 +25,31 @@ public class BurgerTests {
     public String name;
     public float price;
     public IngredientType type;
-    public Ingredient ingredient;
-    public Ingredient secondIngredient;
 
+    @Mock
+    public Ingredient ingredient;
+    @Mock
+    public Ingredient secondIngredient;
+    public Bun bun;
 
     @Before
     public void setData() {
         name = "chicken";
         price = 10;
         type = IngredientType.FILLING;
-        ingredient = new Ingredient(type, name, price);
-        secondIngredient = new Ingredient(type, name+"roll", price+10);
     }
 
     @Test
     public void setBunsTest() {
         Burger burger = new Burger();
-        Bun bun = new Bun(name, price);
+        bun = new Bun(name+"bun", price);
         burger.setBuns(bun);
-        Assert.assertEquals(name,burger.bun.getName());
+        Assert.assertEquals(name+"bun",burger.bun.getName());
         Assert.assertEquals(price,burger.bun.getPrice(),0);
     }
 
     @Test
     public void addIngredientTest() {
-        Ingredient ingredient = new Ingredient(type,name, price);
         Burger burger = new Burger();
         burger.addIngredient(ingredient);
         Assert.assertEquals(ingredient,burger.ingredients.get(0));
@@ -69,11 +74,14 @@ public class BurgerTests {
         burger.moveIngredient(1,0);
         Assert.assertEquals(secondIngredient,burger.ingredients.get(0));
         Assert.assertEquals(ingredient,burger.ingredients.get(1));
+
     }
 
     @Test
     public void getPriceTest() {
         Burger burger = new Burger();
+        Mockito.when(ingredient.getPrice()).thenReturn(price);
+        Mockito.when(secondIngredient.getPrice()).thenReturn(price+10);
         burger.setBuns(new Bun(name, price));
         Assert.assertEquals(name,burger.bun.getName());
         burger.addIngredient(ingredient);
@@ -88,6 +96,12 @@ public class BurgerTests {
     public void getReceiptTest() {
         Burger burger = new Burger();
         burger.setBuns(new Bun(name, price));
+        Mockito.when(ingredient.getName()).thenReturn(name);
+        Mockito.when(ingredient.getType()).thenReturn(type);
+        Mockito.when(ingredient.getPrice()).thenReturn(price);
+        Mockito.when(secondIngredient.getName()).thenReturn(name+"roll");
+        Mockito.when(secondIngredient.getType()).thenReturn(type);
+        Mockito.when(secondIngredient.getPrice()).thenReturn(price+10);
         Assert.assertEquals(name,burger.bun.getName());
         burger.addIngredient(ingredient);
         Assert.assertEquals(ingredient,burger.ingredients.get(0));
