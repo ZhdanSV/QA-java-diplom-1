@@ -16,6 +16,7 @@ public class BunTests {
 */
     private final String name;
     private final float price;
+    private final static double DELTA = 0;
 
     public BunTests(String name, float price) {
         this.name = name;
@@ -40,7 +41,7 @@ public class BunTests {
     @Test
     public void getPriceTest() {
         Bun bun = new Bun(name, price);
-        Assert.assertEquals(price, bun.getPrice(), 0);
+        Assert.assertEquals(price, bun.getPrice(), DELTA);
     }
 
 }
